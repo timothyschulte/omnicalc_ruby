@@ -11,11 +11,14 @@ class CalculationsController < ApplicationController
     # ================================================================================
 
 
-    @word_count = "Replace this string with your answer."
+    @word_count = @text.split.count
 
-    @character_count_with_spaces = "Replace this string with your answer."
-
-    @character_count_without_spaces = "Replace this string with your answer."
+    @character_count_with_spaces = @text.length
+      a = @text.length
+      b = @text.count(" ")
+      
+    @character_count_without_spaces = a - b
+      # characters with spaces minus number of spaces
 
     @occurrences = "Replace this string with your answer."
 
@@ -38,7 +41,18 @@ class CalculationsController < ApplicationController
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
 
-    @monthly_payment = "Replace this string with your answer."
+    apr = params[:annual_percentage_rate].to_f
+    years = params[:number_of_years].to_i
+    principal = params[:principal_value].to_f
+    
+    # formula...payment = (rate * present value) / ((1-(1+rate)^ -# of periods)
+    # the issue with the below is that I'm using a static principal rather than a present value
+    
+    top = ((apr / 100) * (principal))
+    bottom = (1 - (1 + (apr / 100))**1 / (years * 12))
+    
+    
+    @monthly_payment = top / bottom
 
     # ================================================================================
     # Your code goes above.
@@ -82,21 +96,22 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
 
-    @count = "Replace this string with your answer."
-
-    @minimum = "Replace this string with your answer."
-
-    @maximum = "Replace this string with your answer."
-
-    @range = "Replace this string with your answer."
+    @count = @numbers.count
+    count = @numbers.count
+    @minimum = @numbers.min
+    min = @numbers.min
+    @maximum = @numbers.max
+    max = @numbers.max
+    @range = max - min
 
     @median = "Replace this string with your answer."
 
-    @sum = "Replace this string with your answer."
+    @sum = @numbers.sum
+    sum = @numbers.sum
 
-    @mean = "Replace this string with your answer."
+    @mean = sum / count
 
     @variance = "Replace this string with your answer."
 
