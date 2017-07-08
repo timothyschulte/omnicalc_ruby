@@ -20,7 +20,7 @@ class CalculationsController < ApplicationController
     @character_count_without_spaces = a - b
       # characters with spaces minus number of spaces
 
-    @occurrences = "Replace this string with your answer."
+    @occurrences = @text.split.count(@special_word)
 
     # ================================================================================
     # Your code goes above.
@@ -45,14 +45,8 @@ class CalculationsController < ApplicationController
     years = params[:number_of_years].to_i
     principal = params[:principal_value].to_f
     
-    # formula...payment = (rate * present value) / ((1-(1+rate)^ -# of periods)
-    # the issue with the below is that I'm using a static principal rather than a present value
     
-    top = ((apr / 100) * (principal))
-    bottom = (1 - (1 + (apr / 100))**1 / (years * 12))
-    
-    
-    @monthly_payment = top / bottom
+    @monthly_payment = (((principal * (apr / 100)) * years) + principal) / (12* years)
 
     # ================================================================================
     # Your code goes above.
@@ -74,12 +68,23 @@ class CalculationsController < ApplicationController
     #   number of seconds as a result.
     # ================================================================================
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+    @seconds = (@ending - @starting)
+    seconds = @seconds
+    
+    @minutes = (seconds / 60)
+    
+    
+    @hours =  ((seconds / 60) / 60)
+    
+    
+    @days =  (((seconds / 60) / 60) / 24)
+    
+    
+    @weeks = ((((seconds / 60) / 60) / 24) / 7)
+    
+    
+    @years = (((((seconds / 60) / 60) / 24) / 7) / 52)
+    
 
     # ================================================================================
     # Your code goes above.
@@ -97,7 +102,7 @@ class CalculationsController < ApplicationController
     # ================================================================================
 
     @sorted_numbers = @numbers.sort
-
+    sorted = @numbers.sort
     @count = @numbers.count
     count = @numbers.count
     @minimum = @numbers.min
@@ -106,7 +111,24 @@ class CalculationsController < ApplicationController
     max = @numbers.max
     @range = max - min
 
-    @median = "Replace this string with your answer."
+  #   @median = @numbers[3]
+  #   count.odd?
+  #   subtractor = (@numbers.count - 1) / 2  
+
+  #   digit = count - subtractor
+  #   @numbers[digit]
+
+  #   # sort in order...count # of values...determine if even or odd...
+  
+  
+  # # def media(array)
+  # # list = sorted.length
+  # # if list %2 != 0
+  # #   (list + 1) / 2.0
+  # # else
+  # #   even = ((list.to_f + 2) / 2) + ((list.to_f / 2)
+  # #   return (even/2)
+    
 
     @sum = @numbers.sum
     sum = @numbers.sum
