@@ -44,9 +44,17 @@ class CalculationsController < ApplicationController
     apr = params[:annual_percentage_rate].to_f
     years = params[:number_of_years].to_i
     principal = params[:principal_value].to_f
+    monthly = apr / 12
+    months = years * 12
     
-    
-    @monthly_payment = (((principal * (apr / 100)) * years) + principal) / (12* years)
+    @monthly_payment = ((monthly / 100) * principal) / (1 - (1 / ((1 + (monthly / 100)) ** months)))
+        
+        # (((apr / 100) / 12) * principal) / ((1-(1 + ((apr / 100) / 12))) ** ((1 / years)/ 12))
+        # @monthly_payment = ((apr / 100 / 12) * principal) / ((1-(1 + (apr / 100 / 12))) ** (1 / years / 12))
+        # / ((1-((1 + (6.5 / 100 / 12)) ** (1 / years / 12))
+        # ((apr / 100 / 12) * principal) / (1-((1+(6.5 / 100 / 12))** (1 / (years / 12))
+        # (((principal * (apr / 100)) * years) + principal) / (12* years)
+        # (((principal * (apr / 100)) * years) + principal) / (12* years)
 
     # ================================================================================
     # Your code goes above.
@@ -111,35 +119,57 @@ class CalculationsController < ApplicationController
     max = @numbers.max
     @range = max - min
 
-  #   @median = @numbers[3]
+    def median(array)
+      sorted = array.sort
+      len = sorted.length
+      (sorted[(len - 1) / 2] + sorted[len / 2]) / 2.0
+    end
+    @median = median(@numbers)
+    
+  #     def median(array)
+  #   ascend = array.sort
+  #   if ascend % 2 != 0
+  #     (ascend.length + 1) / 2.0
+  #   else
+  #     ((ascend.length/2.0) + ((ascend.length + 2)/2.0) / 2.0)
+  #   end
+  # end
+    
+    
   #   count.odd?
   #   subtractor = (@numbers.count - 1) / 2  
-
   #   digit = count - subtractor
   #   @numbers[digit]
-
   #   # sort in order...count # of values...determine if even or odd...
   
-  
-  # # def media(array)
-  # # list = sorted.length
-  # # if list %2 != 0
-  # #   (list + 1) / 2.0
-  # # else
-  # #   even = ((list.to_f + 2) / 2) + ((list.to_f / 2)
-  # #   return (even/2)
-    
+  # def media(numbers)
+  # list = sorted.length
+  # if list %2 != 0
+  #   (list + 1) / 2.0
+  # else
+  #   even = ((list.to_f + 2) / 2) + ((list.to_f / 2)
+  #   return (even/2)
 
     @sum = @numbers.sum
     sum = @numbers.sum
 
     @mean = sum / count
 
-    @variance = "Replace this string with your answer."
+    variance = @numbers.map { |i| (i - @mean)**2 }.sum / @count
+    @variance = variance
 
-    @standard_deviation = "Replace this string with your answer."
+    stdv = @variance**0.5    
+    @standard_deviation = stdv
 
-    @mode = "Replace this string with your answer."
+    @mode = @numbers.sort
+    .chunk {|e| e}
+    .map { |e,a| [e, a.size] }
+    .sort_by { |_,cnt| -cnt }
+    .chunk(&:last)
+    .first
+    .last
+    .map(&:first)
+    .last
 
     # ================================================================================
     # Your code goes above.
