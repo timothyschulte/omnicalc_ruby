@@ -10,14 +10,34 @@ class CalculationsController < ApplicationController
     # The special word the user input is in the string @special_word.
     # ================================================================================
 
+    text= params[:user_text].downcase.gsub(/[^a-z0-9\s]/i, "")
+    text1= params[:user_text].downcase
 
-    @word_count = "Replace this string with your answer."
+    @word_count = text.split.count
 
-    @character_count_with_spaces = "Replace this string with your answer."
+    @character_count_with_spaces = text1.length
 
-    @character_count_without_spaces = "Replace this string with your answer."
+    @character_count_without_spaces =text1.gsub(/\s+/, "").length
 
-    @occurrences = "Replace this string with your answer."
+    @occurrences = text.split.count(@special_word)
+
+
+
+
+
+
+
+
+    # @word_count = @text.split.count
+
+    # @character_count_with_spaces = @text.length
+    #   a = @text.length
+    #   b = @text.count(" ")
+      
+    # @character_count_without_spaces = a - b
+    #   # characters with spaces minus number of spaces
+
+    # @occurrences = @text.split.count(@special_word)
 
     # ================================================================================
     # Your code goes above.
@@ -38,7 +58,20 @@ class CalculationsController < ApplicationController
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
 
-    @monthly_payment = "Replace this string with your answer."
+    apr = params[:annual_percentage_rate].to_f
+    years = params[:number_of_years].to_i
+    principal = params[:principal_value].to_f
+    monthly = apr / 12
+    months = years * 12
+    
+    @monthly_payment = ((monthly / 100) * principal) / (1 - (1 / ((1 + (monthly / 100)) ** months)))
+        
+        # (((apr / 100) / 12) * principal) / ((1-(1 + ((apr / 100) / 12))) ** ((1 / years)/ 12))
+        # @monthly_payment = ((apr / 100 / 12) * principal) / ((1-(1 + (apr / 100 / 12))) ** (1 / years / 12))
+        # / ((1-((1 + (6.5 / 100 / 12)) ** (1 / years / 12))
+        # ((apr / 100 / 12) * principal) / (1-((1+(6.5 / 100 / 12))** (1 / (years / 12))
+        # (((principal * (apr / 100)) * years) + principal) / (12* years)
+        # (((principal * (apr / 100)) * years) + principal) / (12* years)
 
     # ================================================================================
     # Your code goes above.
@@ -60,12 +93,23 @@ class CalculationsController < ApplicationController
     #   number of seconds as a result.
     # ================================================================================
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+    @seconds = (@ending - @starting)
+    seconds = @seconds
+    
+    @minutes = (seconds / 60)
+    
+    
+    @hours =  ((seconds / 60) / 60)
+    
+    
+    @days =  (((seconds / 60) / 60) / 24)
+    
+    
+    @weeks = ((((seconds / 60) / 60) / 24) / 7)
+    
+    
+    @years = (((((seconds / 60) / 60) / 24) / 7) / 52)
+    
 
     # ================================================================================
     # Your code goes above.
@@ -82,27 +126,67 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
+    sorted = @numbers.sort
+    @count = @numbers.count
+    count = @numbers.count
+    @minimum = @numbers.min
+    min = @numbers.min
+    @maximum = @numbers.max
+    max = @numbers.max
+    @range = max - min
 
-    @count = "Replace this string with your answer."
+    def median(array)
+      sorted = array.sort
+      len = sorted.length
+      (sorted[(len - 1) / 2] + sorted[len / 2]) / 2.0
+    end
+    @median = median(@numbers)
+    
+  #     def median(array)
+  #   ascend = array.sort
+  #   if ascend % 2 != 0
+  #     (ascend.length + 1) / 2.0
+  #   else
+  #     ((ascend.length/2.0) + ((ascend.length + 2)/2.0) / 2.0)
+  #   end
+  # end
+    
+    
+  #   count.odd?
+  #   subtractor = (@numbers.count - 1) / 2  
+  #   digit = count - subtractor
+  #   @numbers[digit]
+  #   # sort in order...count # of values...determine if even or odd...
+  
+  # def media(numbers)
+  # list = sorted.length
+  # if list %2 != 0
+  #   (list + 1) / 2.0
+  # else
+  #   even = ((list.to_f + 2) / 2) + ((list.to_f / 2)
+  #   return (even/2)
 
-    @minimum = "Replace this string with your answer."
+    @sum = @numbers.sum
+    sum = @numbers.sum
 
-    @maximum = "Replace this string with your answer."
+    @mean = sum / count
 
-    @range = "Replace this string with your answer."
+    variance = @numbers.map { |i| (i - @mean)**2 }.sum / @count
+    @variance = variance
 
-    @median = "Replace this string with your answer."
+    stdv = @variance**0.5    
+    @standard_deviation = stdv
 
-    @sum = "Replace this string with your answer."
-
-    @mean = "Replace this string with your answer."
-
-    @variance = "Replace this string with your answer."
-
-    @standard_deviation = "Replace this string with your answer."
-
-    @mode = "Replace this string with your answer."
+    @mode = @numbers.sort
+    .chunk {|e| e}
+    .map { |e,a| [e, a.size] }
+    .sort_by { |_,cnt| -cnt }
+    .chunk(&:last)
+    .first
+    .last
+    .map(&:first)
+    .last
 
     # ================================================================================
     # Your code goes above.
